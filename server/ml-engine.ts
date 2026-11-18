@@ -287,9 +287,15 @@ export class MLEngine {
     // Derive ground truth or feature-based classification
     let baseCategory: AttackCategory = packet.actualCategory || 'Normal';
     if (!packet.actualCategory) {
+<<<<<<< HEAD
       if (packet.serrorRate > 0.6 || packet.flag === 'S0' || (packet.count > 150 && packet.serrorRate > 0.4) || (packet.protocol === 'icmp' && (packet.srcBytes || 0) > 1000)) {
         baseCategory = 'DoS';
       } else if (packet.diffSrvRate > 0.45 || (packet.flag === 'REJ' && (packet.count || 0) > 50)) {
+=======
+      if ((packet.serrorRate ?? 0) > 0.6 || packet.flag === 'S0' || ((packet.count ?? 0) > 150 && (packet.serrorRate ?? 0) > 0.4) || (packet.protocol === 'icmp' && (packet.srcBytes || 0) > 1000)) {
+        baseCategory = 'DoS';
+      } else if ((packet.diffSrvRate ?? 0) > 0.45 || (packet.flag === 'REJ' && (packet.count || 0) > 50)) {
+>>>>>>> 9e372f9be5e4b46abecc9b872fa02883a8f7c163
         baseCategory = 'Probe';
       } else if ((packet.service === 'ftp' || packet.service === 'ssh') && (packet.srcBytes || 0) > 1200 && (packet.dstBytes || 0) < 300) {
         baseCategory = 'R2L';
@@ -304,10 +310,17 @@ export class MLEngine {
     let dtCat: AttackCategory = 'Normal';
     let dtConf = 0.92;
 
+<<<<<<< HEAD
     if (packet.serrorRate > 0.65 || (packet.count > 150 && packet.serrorRate > 0.4)) {
       dtCat = 'DoS';
       dtConf = 0.97;
     } else if (packet.diffSrvRate > 0.5 && packet.dstHostDiffSrvRate > 0.4) {
+=======
+    if ((packet.serrorRate ?? 0) > 0.65 || ((packet.count ?? 0) > 150 && (packet.serrorRate ?? 0) > 0.4)) {
+      dtCat = 'DoS';
+      dtConf = 0.97;
+    } else if ((packet.diffSrvRate ?? 0) > 0.5 && (packet.dstHostDiffSrvRate ?? 0) > 0.4) {
+>>>>>>> 9e372f9be5e4b46abecc9b872fa02883a8f7c163
       dtCat = 'Probe';
       dtConf = 0.93;
     } else if (packet.service === 'ftp' && (packet.srcBytes || 0) > 1200 && (packet.dstBytes || 0) < 300) {

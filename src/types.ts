@@ -114,3 +114,21 @@ export interface PacketPrediction {
   featureContributions?: Array<{ feature: string; impact: number }>;
   inferenceTimeMs: number;
 }
+<<<<<<< HEAD
+=======
+
+// --- Authentication & Role-Based Authorization Types ---
+export type AppModule = 'monitor' | 'benchmark' | 'features' | 'tester' | 'report';
+
+export type UserRole = 'admin' | 'analyst' | 'researcher' | 'viewer';
+
+export interface AuthUser {
+  id: string;
+  username: string;
+  fullName: string;
+  role: UserRole;
+  roleLabel: string;
+  allowedModules: AppModule[];
+  canRetrain: boolean;
+}
+>>>>>>> 9e372f9be5e4b46abecc9b872fa02883a8f7c163

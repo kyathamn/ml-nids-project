@@ -3,6 +3,10 @@ import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+<<<<<<< HEAD
+=======
+import crypto from 'crypto';
+>>>>>>> 9e372f9be5e4b46abecc9b872fa02883a8f7c163
 import { GoogleGenAI } from '@google/genai';
 import { createServer as createViteServer } from 'vite';
 
@@ -16,6 +20,112 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 
+<<<<<<< HEAD
+=======
+// --- Authentication & Role-Based Access Control (RBAC) ---
+interface ServerUser {
+  id: string;
+  username: string;
+  password: string;
+  fullName: string;
+  role: 'admin' | 'analyst' | 'researcher' | 'viewer';
+  roleLabel: string;
+  allowedModules: Array<'monitor' | 'benchmark' | 'features' | 'tester' | 'report'>;
+  canRetrain: boolean;
+}
+
+const USERS_DB: ServerUser[] = [
+  {
+    id: 'usr-01',
+    username: 'admin',
+    password: '123',
+    fullName: 'Chief Security Admin',
+    role: 'admin',
+    roleLabel: 'Security Administrator',
+    allowedModules: ['monitor', 'benchmark', 'features', 'tester', 'report'],
+    canRetrain: true,
+  },
+  {
+    id: 'usr-02',
+    username: 'analyst',
+    password: '123',
+    fullName: 'SOC Threat Analyst',
+    role: 'analyst',
+    roleLabel: 'SOC Tier-2 Analyst',
+    allowedModules: ['monitor', 'tester', 'report'],
+    canRetrain: false,
+  },
+  {
+    id: 'usr-03',
+    username: 'researcher',
+    password: '123',
+    fullName: 'ML Security Researcher',
+    role: 'researcher',
+    roleLabel: 'ML Research Engineer',
+    allowedModules: ['benchmark', 'features', 'tester', 'report'],
+    canRetrain: true,
+  },
+  {
+    id: 'usr-04',
+    username: 'viewer',
+    password: '123',
+    fullName: 'Audit Guest Viewer',
+    role: 'viewer',
+    roleLabel: 'Read-Only Auditor',
+    allowedModules: ['monitor', 'report'],
+    canRetrain: false,
+  },
+];
+
+// Set matching role passwords
+USERS_DB[0].password = 'admin123';
+USERS_DB[1].password = 'analyst123';
+USERS_DB[2].password = 'research123';
+USERS_DB[3].password = 'viewer123';
+
+const activeSessions = new Map<string, Omit<ServerUser, 'password'>>();
+
+app.post('/api/auth/login', (req, res) => {
+  const { username, password } = req.body || {};
+  if (!username || !password) {
+    return res.status(400).json({ error: 'Username and password are required' });
+  }
+
+  const found = USERS_DB.find(
+    (u) => u.username.toLowerCase() === String(username).trim().toLowerCase() && u.password === String(password)
+  );
+
+  if (!found) {
+    return res.status(401).json({ error: 'Invalid username or password' });
+  }
+
+  const { password: _, ...safeUser } = found;
+  const token = crypto.randomBytes(24).toString('hex');
+  activeSessions.set(token, safeUser);
+
+  return res.json({ token, user: safeUser });
+});
+
+app.get('/api/auth/me', (req, res) => {
+  const authHeader = req.headers.authorization || '';
+  const token = authHeader.replace('Bearer ', '').trim();
+  const user = activeSessions.get(token);
+
+  if (!user) {
+    return res.status(401).json({ error: 'Session expired or invalid' });
+  }
+  return res.json({ user });
+});
+
+app.post('/api/auth/logout', (req, res) => {
+  const authHeader = req.headers.authorization || '';
+  const token = authHeader.replace('Bearer ', '').trim();
+  activeSessions.delete(token);
+  return res.json({ success: true });
+});
+
+
+>>>>>>> 9e372f9be5e4b46abecc9b872fa02883a8f7c163
 // Server-side Gemini AI Threat Analysis Proxy Route
 app.post('/api/analyze-threat', async (req, res) => {
   const { packet, prediction } = req.body;
