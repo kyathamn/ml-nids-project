@@ -1,0 +1,6 @@
+{
+  "name": "Network Intrusion Detection System (ML-NIDS)",
+  "description": "Supervised Machine Learning Intrusion Detection System featuring Decision Trees, Random Forest, SVM, and Neural Networks with real-time packet inspection, feature selection, and attack analysis.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
